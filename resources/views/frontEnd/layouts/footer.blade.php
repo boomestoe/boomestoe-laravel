@@ -78,6 +78,7 @@
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/jquery.meanmenu.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/progress-bar-appear.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/owl-carousel/owl.carousel.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('frontEnd/assets/owl-carousel/owl.carousel.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/nivo-lightbox.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/isotope.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/countdown.js')}}"></script>
@@ -85,6 +86,18 @@
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/gmaps.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/plugins.js')}}"></script>
     <script type="text/javascript" src="{{asset('frontEnd/assets/js/js.js')}}"></script>
+    <script>
+    $(function () {
+        $('.single-slider','.slider-screen').owlCarousel({
+            loop:true,
+            margin:10,
+            items:1,
+            autoplay:true,
+            autoplayTimeout:3000,
+            autoplayHoverPause:true,
+        });
+    })
+    </script>
 
 {{-- section-footer --}}
 @section('footer')

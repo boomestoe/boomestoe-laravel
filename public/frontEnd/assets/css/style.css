@@ -1446,7 +1446,7 @@ form.comment-form.altered .field:last-child {
     margin: 0;
 }
 .single-slider {
-    background: rgba(0, 0, 0, 0) none repeat scroll right center;
+    background: rgba(0, 0, 0, 0) /*none*/ repeat scroll right center;
     padding: 200px 0;
 }
 .border-t-b {

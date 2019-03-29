@@ -40,23 +40,17 @@ class SliderController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'judul_slider' => 'required',
-            'deskripsi_slider' => 'required',
+            'judul_slider' => 'required|min:6',
+            'deskripsi_slider' => 'required|min:6',
             'gambar_slider' => 'required|image|mimes:jpeg,png,jpg,gif,bmp|max:2048',
         ]);
 
         // save to public folder
-        $image = $request->file('gambar_slider');
-        $slugSlider = str_slug($request->judul_slider);
-        if (isset($image)) {
+            $imgSlider = $request->file('gambar_slider');
+        if ($request->hasFile('gambar_slider')) {
             $currentDate = Carbon::now()->toDateString();
-            $imageName = $slugSlider .'-'.$currentDate .'-'. uniqid() .'.'. $image->getClientOriginalExtension();
-            if (!file_exists('public/images/slider')) {
-                mkdir('public/images/slide', 0777 , true);
-            }
-            $image->storeAs('public/images/slider',$imageName);
-        }else {
-            $imageName = 'default.jpg';
+            $sliderName = $currentDate .'-'. uniqid() .'.'. $imgSlider->getClientOriginalExtension();
+            $imgSlider->storeAs('public/images/slider',$sliderName);  
         }
 
         // save to DB
@@ -64,7 +58,7 @@ class SliderController extends Controller
         $slider->slider_judul = $request->judul_slider;
         $slider->slider_subjudul = $request->deskripsi_slider;
         $slider->slider_pengguna_id = 1;
-        $slider->slider_gambar = $imageName;
+        $slider->slider_gambar = $sliderName;
         $slider->slider_ukuran = $request->file('gambar_slider')->getSize();
         $slider->slider_mime = $request->file('gambar_slider')->getClientMimeType();
         $slider->slider_status = $request->status_slider;
@@ -106,30 +100,38 @@ class SliderController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'judul_slider' => 'required',
-            'deskripsi_slider' => 'required',
+            'judul_slider' => 'required|min:6',
+            'deskripsi_slider' => 'required|min:6',
             'gambar_slider' => 'mimes:jpeg,jpg,bmp,png',
         ]);
+        
+        // replace old file name with new in folder
+        $imgSlider = $request->file('gambar_slider');
 
-         // save to public folder
-        $image = $request->file('gambar_slider');
-        $slugSlider = str_slug($request->judul_slider);
+        // sfind data by id
         $slider = slider::find($id);
-        if (isset($image)) {
+        if (isset($imgSlider))
+        {
             $currentDate = Carbon::now()->toDateString();
-            $imageName = $slugSlider .'-'.$currentDate .'-'. uniqid() .'.'. $image->getClientOriginalExtension();
-            if (!file_exists('public/images/slider')) {
-                mkdir('public/images/slide', 0777 , true);
+            $newSliderName = $currentDate .'-'. uniqid() .'.'. $imgSlider->getClientOriginalExtension();
+            if (!file_exists('public/images/slider'))
+            {
+                mkdir('public/images/slider'); 
             }
-            $image->storeAs('public/images/slider',$imageName);
+            $imgSlider->storeAs('public/images/slider',$newSliderName);            
         }else {
-            $imagename = $slider->image;
+            $newSliderName = $slider->imgSlider;
         }
 
+        // if ($request->hasFile('gambar_slider')) {
+        //     $currentDate = Carbon::now()->toDateString();
+        //     $newSliderName = $currentDate .'-'. uniqid() .'.'. $imgSlider->getClientOriginalExtension();
+        //     $request->gambar_slider->storeAs('public/images/slider',$newSliderName); 
+        // }
+
        //  Found existing file then delete
-        // if (file_exists('storage/images/slider/'.$slider->slider_gambar))        
-        // {
-        //     unlink('storage/images/slider/'.$slider->slider_gambar);            
+       //  if (file_exists('storage/images/slider/'.$slider->slider_gambar)) {
+            // unlink('storage/images/slider/'.$slider->slider_gambar); 
         // }
 
        //  save to DB
@@ -137,7 +139,7 @@ class SliderController extends Controller
         $slider->slider_judul = $request->judul_slider;
         $slider->slider_subjudul = $request->deskripsi_slider;
         $slider->slider_pengguna_id = 1;
-        $slider->slider_gambar = $imageName;
+        $slider->slider_gambar = $sliderName;
         $slider->slider_ukuran = $request->file('gambar_slider')->getSize();
         $slider->slider_mime = $request->file('gambar_slider')->getClientMimeType();
         $slider->slider_status = $request->status_slider;
